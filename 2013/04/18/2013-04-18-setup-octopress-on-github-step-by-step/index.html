@@ -1,0 +1,574 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>教程:一步步在github上建立octopress博客 | reject</title>
+  <meta name="author" content="znithy">
+  
+  <meta name="description" content="照此教程,可搭建此博客.
+目标
+创建网址为http://never.doubting.me的博客.博客使用octopress程序,搭建在github的服务器上.网页与本地机器的never.doubting.me文件夹同步.
+步骤
+1) 下载octopress至本地never.doubting.me文件夹
+octopress的源代码同样在github上管理,因此我们使用git克隆一份到本地的never.doubting.me文件夹,并进入此文件夹.
+如你没有域名,可以使用github提供的默认域名:yourname.github.com,yourname是你github的用户名.
+1
+2
+git clone git://github.com/imathis/octopress.git never.doubting.me
+cd never.doubting.me
+
+
+2) 安装相关组件
+1
+2
+gem install bundler
+bundle install
+
+
+3) 安装主题
+1
+rake install
+
+上条命令安装默认主题,在https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes可以找到许多第三方主题,这儿我们选择slash主题,如询问是否覆盖,选择是:
+
+1
+2
+git clone git://github.com/tommy351/Octopress-Theme-Slash.git .themes/slash
+rake install['slash']
+
+###4) 在github上创建repository
+注意:repository的名字一定要yourname.github.com这样的格式.
+youname是你注册时的用户名.
+
+这儿我创建名为znithy.github.com的repository,创建好后拷贝ssh地址.
+
+https://github.com/znithy/znithy.github.com.git
+
+###5) 建立本地与github的联系
+
+1
+rake setup_github_pages
+
+输入上述ssh地址,注意区分大小写.
+如遇验证问题,提示类似
+
+1
+2
+3
+4
+5
+6
+rake aborted!
+undefined method
+[]' for nil:NilClass
+
+Tasks: TOP =&gt; setup_github_pages
+(See full trace by running task with --trace)
+
+
+的信息,请看此文:[github设置ssh验证]
+6) 绑定域名
+首先把你的域名指向207.97.227.245,如不知怎么操作,请咨询域名注册商.
+在source文件夹下建立CNAME文件:
+1
+echo 'never.doubting.me' &gt;&gt; source/CNAME
+
+
+7) 生成网页并推送到github
+1
+2
+rake generate
+rake deploy
+
+稍等几分钟,你就可通过域名访问博客了.并且收到一封博客建立的信件.
+
+###8) 自定义博客
+博客的基本信息在_config.yml文件中修改.
+自定义css等在source文件夹中.
+修改后别忘了:
+
+1
+2
+rake generate
+rake deploy
+
+
+9) 发表文章
+1
+rake new_post[&quot;教程:一步步在github上建立octopress博客&quot;]
+
+这儿我新建了一篇名为教程:一步步在github上建立octopress博客的文章.
+之后去source/_post/文件夹找到对应.markdown文件修改.
+
+打开文件后可以看到文件头包含一些文章的信息,这儿我修改为:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+---
+layout: post    
+title: &quot;教程:一步步在github上建立octopress博客&quot;    
+date: 2013-04-18 01:13    
+author: znithy	
+comments: true    
+categories:     
+- 教程    
+- github	
+- octopress    
+published: false
+---   
+
+
+第一张指明此篇是post,后面是标题,时间和作者,我加了教程 github octopuses 三个标签,并且允许评论,published: false表示不要发表,如想要发表改成published: true或者直接删掉这行.
+文章直接写在这部分内容下面.
+10) 发表外链文章
+点击标题转向其他网页.创建方法同上,只是需要添加external-url这个条目.
+下面是一个例子:
+1
+2
+3
+4
+5
+6
+7
+---	    
+layout: post	
+title: &quot;非常不错的科学博客&quot;	
+date: 2013-04-18 01:13 		
+comments: true		
+external-url: http://keep.doubting.me/		
+---	    	
+
+
+11) 发表页面
+创建网址为http://never.doubting.me/about/i.html的网页:
+1
+rake new_page[about/i.html]    
+
+
+与post不同的是,此时没有categories这个条目,但多了sharing和footer,具体有什么作用,不妨自己试下.
+1
+2
+3
+4
+5
+6
+7
+8
+---    
+layout: page    	
+title: &quot;Super Awesome&quot;    
+date: 2011-07-03 5:59    
+comments: true    
+sharing: true    
+footer: true    	
+---    
+
+
+12) 管理文章
+直接增加或删除.markdown文件即可.
+每次更新文件后别忘了:
+1
+2
+rake generate
+rake deploy
+
+
+其他
+关于怎样使用git,这份教程很不错,推荐.
+
+看日记学git.pdf
+
+第三方插件地址:
+
+https://github.com/imathis/octopress/wiki/3rd-party-plugins
+
+中文问题:
+如遇到此类提示(可能因设置了中文的catagory):
+1
+2
+3
+4
+5
+...
+Liquid Exception: invalid byte sequence in UTF-8 in atom.xml
+/Documents/never.doubting.me/plugins/octopress_filters.rb:75:in `gsub'
+/Documents/never.doubting.me/plugins/octopress_filters.rb:75:in `cdata_escape'
+...
+
+
+最方便的方法是换用kramdown.首先安装kramdown:
+1
+gem install kramdown
+
+
+之后修改_config.yml文件:
+1
+markdown: kramdown">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="教程:一步步在github上建立octopress博客"/>
+  <meta property="og:site_name" content="reject"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="reject" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">reject</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-04-17T23:13:00.000Z"><a href="/2013/04/18/2013-04-18-setup-octopress-on-github-step-by-step/">Apr 18 2013</a></time>
+      
+      
+  
+    <h1 class="title">教程:一步步在github上建立octopress博客</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><em>照此教程,可搭建此博客.</em></p>
+<h2>目标</h2>
+<p>创建网址为<a href="http://never.doubting.me">http://never.doubting.me</a>的博客.博客使用octopress程序,搭建在github的服务器上.网页与本地机器的<code>never.doubting.me</code>文件夹同步.</p>
+<h2>步骤</h2>
+<h3>1) 下载octopress至本地never.doubting.me文件夹</h3>
+<p>octopress的源代码同样在github上管理,因此我们使用git克隆一份到本地的<code>never.doubting.me</code>文件夹,并进入此文件夹.
+如你没有域名,可以使用github提供的默认域名:<code>yourname.github.com</code>,yourname是你github的用户名.</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>git clone git://github.com/imathis/octopress.git never.doubting.me
+cd never.doubting.me
+</pre></td></tr></table></figure>
+
+<h3>2) 安装相关组件</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>gem install bundler
+bundle install
+</pre></td></tr></table></figure>
+
+<h3>3) 安装主题</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>rake install
+</pre></td></tr></table></figure>
+上条命令安装默认主题,在<a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes</a>可以找到许多第三方主题,这儿我们选择<a href="http://zespia.tw/Octopress-Theme-Slash/">slash</a>主题,如询问是否覆盖,选择是:
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>git clone git://github.com/tommy351/Octopress-Theme-Slash.git .themes/slash
+rake install[<span class="string">'slash'</span>]
+</pre></td></tr></table></figure>
+###4) 在github上创建repository
+<strong>注意:repository的名字一定要<code>yourname.github.com</code>这样的格式.</strong>
+<code>youname</code>是你注册时的用户名.
+
+这儿我创建名为<code>znithy.github.com</code>的repository,创建好后拷贝ssh地址.
+
+<code>https://github.com/znithy/znithy.github.com.git</code>
+
+###5) 建立本地与github的联系
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>rake setup_github_pages
+</pre></td></tr></table></figure>
+输入上述ssh地址,注意区分大小写.
+如遇验证问题,提示类似
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre>rake aborted!
+undefined method
+[]<span class="string">' for nil:NilClass
+
+Tasks: TOP =&gt; setup_github_pages
+(See full trace by running task with --trace)
+</pre></td></tr></table></figure>
+
+<p>的信息,请看此文:[github设置ssh验证]</p>
+<h3>6) 绑定域名</h3>
+<p>首先把你的域名指向<code>207.97.227.245</code>,如不知怎么操作,请咨询域名注册商.
+在source文件夹下建立CNAME文件:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">echo</span> <span class="string">'never.doubting.me'</span> &gt;&gt; source/CNAME
+</pre></td></tr></table></figure>
+
+<h3>7) 生成网页并推送到github</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>rake generate
+rake deploy
+</pre></td></tr></table></figure>
+稍等几分钟,你就可通过域名访问博客了.并且收到一封博客建立的信件.
+
+###8) 自定义博客
+博客的基本信息在<code>_config.yml</code>文件中修改.
+自定义css等在<code>source</code>文件夹中.
+修改后别忘了:
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>rake generate
+rake deploy
+</pre></td></tr></table></figure>
+
+<h3>9) 发表文章</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>rake new_post[<span class="string">"教程:一步步在github上建立octopress博客"</span>]
+</pre></td></tr></table></figure>
+这儿我新建了一篇名为<code>教程:一步步在github上建立octopress博客</code>的文章.
+之后去<code>source/_post/</code>文件夹找到对应<code>.markdown</code>文件修改.
+
+打开文件后可以看到文件头包含一些文章的信息,这儿我修改为:
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="code"><pre>---
+layout: post    
+title: <span class="string">"教程:一步步在github上建立octopress博客"</span>    
+date: 2013-04-18 01:13    
+author: znithy	
+comments: <span class="literal">true</span>    
+categories:     
+- 教程    
+- github	
+- octopress    
+published: <span class="literal">false</span>
+---   
+</pre></td></tr></table></figure>
+
+<p>第一张指明此篇是<code>post</code>,后面是标题,时间和作者,我加了<code>教程</code> <code>github</code> <code>octopuses</code> 三个标签,并且允许评论,<code>published: false</code>表示不要发表,如想要发表改成<code>published: true</code>或者直接删掉这行.</p>
+<p>文章直接写在这部分内容下面.</p>
+<h3>10) 发表外链文章</h3>
+<p>点击标题转向其他网页.创建方法同上,只是需要添加<code>external-url</code>这个条目.
+下面是一个例子:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre>---	    
+layout: post	
+title: <span class="string">"非常不错的科学博客"</span>	
+date: 2013-04-18 01:13 		
+comments: <span class="literal">true</span>		
+external-url: http://keep.doubting.me/		
+---	    	
+</pre></td></tr></table></figure>
+
+<h3>11) 发表页面</h3>
+<p>创建网址为<code>http://never.doubting.me/about/i.html</code>的网页:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>rake new_page[about/i.html]    
+</pre></td></tr></table></figure>
+
+<p>与<code>post</code>不同的是,此时没有<code>categories</code>这个条目,但多了<code>sharing</code>和<code>footer</code>,具体有什么作用,不妨自己试下.</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre>---    
+layout: page    	
+title: <span class="string">"Super Awesome"</span>    
+date: 2011-07-03 5:59    
+comments: <span class="literal">true</span>    
+sharing: <span class="literal">true</span>    
+footer: <span class="literal">true</span>    	
+---    
+</pre></td></tr></table></figure>
+
+<h3>12) 管理文章</h3>
+<p>直接增加或删除.markdown文件即可.
+每次更新文件后别忘了:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>rake generate
+rake deploy
+</pre></td></tr></table></figure>
+
+<h2>其他</h2>
+<h3>关于怎样使用git,这份教程很不错,推荐.</h3>
+<blockquote>
+<p><a href="http://znithy.com/download/看日记学git.pdf">看日记学git.pdf</a></p>
+</blockquote>
+<h3>第三方插件地址:</h3>
+<blockquote>
+<p><a href="https://github.com/imathis/octopress/wiki/3rd-party-plugins">https://github.com/imathis/octopress/wiki/3rd-party-plugins</a></p>
+</blockquote>
+<h3>中文问题:</h3>
+<p>如遇到此类提示(可能因设置了中文的catagory):</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre>...
+Liquid Exception: invalid byte sequence <span class="keyword">in</span> UTF-8 <span class="keyword">in</span> atom.xml
+/Documents/never.doubting.me/plugins/octopress_filters.rb:75:<span class="keyword">in</span> `gsub<span class="string">'
+/Documents/never.doubting.me/plugins/octopress_filters.rb:75:in `cdata_escape'</span>
+...
+</pre></td></tr></table></figure>
+
+<p>最方便的方法是换用kramdown.首先安装kramdown:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>gem install kramdown
+</pre></td></tr></table></figure>
+
+<p>之后修改<code>_config.yml</code>文件:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>markdown: kramdown
+</pre></td></tr></table></figure>
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/教程/">教程</a>, <a href="/categories/教程/github/">github</a>, <a href="/categories/教程/github/octopress/">octopress</a>
+  </div>
+
+        
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:reject.">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/github/">github</a><small>1</small></li>
+  
+    <li><a href="/categories/教程/github/">github</a><small>1</small></li>
+  
+    <li><a href="/categories/github/教程/octopress/">octopress</a><small>1</small></li>
+  
+    <li><a href="/categories/教程/github/octopress/">octopress</a><small>1</small></li>
+  
+    <li><a href="/categories/github/教程/">教程</a><small>1</small></li>
+  
+    <li><a href="/categories/教程/">教程</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+
+  
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2013 znithy
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

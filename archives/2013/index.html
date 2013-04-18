@@ -83,6 +83,553 @@
 
 
   
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-04-18T19:06:00.000Z"><a href="/2013/04/18/2013-04-18-input-fomula-with-tex-in-octopress/">Apr 18 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/04/18/2013-04-18-input-fomula-with-tex-in-octopress/">在octopress中使用tex输入公式</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>方法很简单,让octopress调用mathjax.</p>
+<p>修改<code>source/_include/custom/head.html</code>文件,添加如下内容:</p>
+<figure class="highlight lang-html"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre></td><td class="code"><pre>&lt;style TYPE="text/css"&gt;
+code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
+&lt;/style&gt;
+&lt;!-- RFE: for easier MathJax install https://github.com/mathjax/MathJax/issues/339 --&gt;
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
+    }
+});
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i &lt; all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+&lt;/script&gt;
+
+&lt;script type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'&gt;&lt;/script&gt;
+&lt;!-- CDN upload request sent in private mail to generated-toc author --&gt;
+</pre></td></tr></table></figure>
+
+<h3>效果:</h3>
+<figure class="highlight lang-html"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="code"><pre>
+Google means $10^{100}$
+
+A Cross Product Formula
+
+$$
+\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix}
+\mathbf{i} & \mathbf{j} & \mathbf{k} \\\
+\frac{\partial X}{\partial u} &  \frac{\partial Y}{\partial u} & 0 \\\
+\frac{\partial X}{\partial v} &  \frac{\partial Y}{\partial v} & 0
+\end{vmatrix}
+$$
+
+The probability of getting $k$ heads when flipping $n$ coins is
+
+$$
+P(E) = {n \choose k} p^k (1-p)^{ n-k}
+$$
+</pre></td></tr></table></figure>
+
+<p>Google means $10^{100}$</p>
+<p>A Cross Product Formula</p>
+<p>$$
+\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix}
+\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
+\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \\
+\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0
+\end{vmatrix}
+$$</p>
+<p>The probability of getting $k$ heads when flipping $n$ coins is</p>
+<p>$$
+P(E) = {n \choose k} p^k (1-p)^{ n-k}
+$$</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2013/04/18/2013-04-18-input-fomula-with-tex-in-octopress/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-04-18T18:00:00.000Z"><a href="/2013/04/18/2013-04-18-set-multiply-accounts-on-github/">Apr 18 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/04/18/2013-04-18-set-multiply-accounts-on-github/">教程:github设置多账号</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2>问题</h2>
+<p>在guthub上拥有多个账号,怎样设置使得终端能同时支持多个账号.</p>
+<h2>解决思路</h2>
+<p>github通过秘钥来认证账号,因此我们通过配置ssh的<code>config</code>文件,建立多个条目,分别对应不同的秘钥.</p>
+<h2>步骤</h2>
+<p>现在的情况是之前已经有了一个github账号,且全部配置好了,<code>~/.ssh</code>文件夹下有<code>id_rsa</code>和<code>id_rsa.pub</code>这两个文件.</p>
+<blockquote>
+<p>关于怎样建立ssh认证请看此文:<a href="http://never.doubting.me/2013/04/github-set-up-ssh-keys/">教程: Github设置ssh连接</a></p>
+</blockquote>
+<p>现在新注册了一个账号,账号名字是<code>znithy</code>,并在这个账号下建立了名为<code>znithy.github.com</code>的repository.</p>
+<h3>1) 新建秘钥</h3>
+<p>因为github规定一组秘钥只能用于一个账号,因此我们为账号<code>znithy</code>新建一组秘钥:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>cd ~/.ssh
+ssh-keygen -t rsa -C <span class="string">"znithy@mail.com"</span>
+</pre></td></tr></table></figure>
+
+<p>要求输入文件名时输入<code>id_rsa_znithy</code>.</p>
+<p>命令执行后得到<code>id_rsa_znithy</code>和<code>id_rsa_znithy.pub</code>两个文件.</p>
+<p>因为我们没有采用默认名字,因此需要告诉系统新建秘钥的名字:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>ssh-add ~/.ssh/id_rsa_znithy
+</pre></td></tr></table></figure>
+
+<p>把<code>id_rsa_znithy.pub</code>的内容添加到github的ssh keys中:<a href="https://github.com/settings/ssh">https://github.com/settings/ssh</a></p>
+<h3>2) 建立config配置文件</h3>
+<p>在<code>~/.ssh</code>文件夹下添加名为<code>config</code>的文件,文件内容是:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre>Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa
+
+
+Host znithy.github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa_znithy
+</pre></td></tr></table></figure>
+
+<p>下半部分的意思时以后ssh访问<code>znithy.github.com</code>(这名字任意取)时实际上实际上是用<code>id_rsa_znithy</code>这个秘钥访问<code>github.com</code>.因此对于znithy这个账号,我们把内容推送到github时要用<code>znithy.github.com</code>代替<code>github.com</code>.</p>
+<p>比如repository原本的ssh地址是:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>git@github.com:znithy/znithy.github.com.git
+</pre></td></tr></table></figure>
+
+<p>现在ssh上传时需要输入:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>git@znithy.github.com:znithy/znithy.github.com.git
+</pre></td></tr></table></figure>
+
+<p>这样配置就完成了,ssh上传时<code>@github.com</code>对应第一个账户,<code>@znithy.github.com</code>对应第二个名为<code>znithy</code>的账户.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2013/04/18/2013-04-18-set-multiply-accounts-on-github/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-04-18T02:03:00.000Z"><a href="/2013/04/18/2013-04-18-github-set-up-ssh-keys/">Apr 18 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/04/18/2013-04-18-github-set-up-ssh-keys/">教程: github设置ssh连接</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2>问题</h2>
+<p>本地与github关联时可能遇到ssh验证问题,类似如下提示信息:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre>rake aborted!    
+undefined method `[]<span class="string">' for nil:NilClass    
+
+Tasks: TOP =&gt; setup_github_pages    
+(See full trace by running task with --trace)    
+</pre></td></tr></table></figure>
+
+
+<h2>原因</h2>
+<p>缺少建立ssh连接要求的秘钥.</p>
+<h2>解决方法</h2>
+<h3>1) 检查是否已经有ssh秘钥</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>cd ~/.ssh    	
+ls -a
+</pre></td></tr></table></figure>
+
+<p>进入目录后,查看是否有<code>id_rsa</code>和<code>id_rsa.pub</code>这两个文件.</p>
+<p>如不存在<code>.ssh</code>文件夹,自然不存在上述两个文件.</p>
+<p>如已有这两个文件,直接跳到步骤3.</p>
+<h3>2) 生成ssh秘钥</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>ssh-keygen -t rsa -C <span class="string">"youremail@example.com"</span>
+</pre></td></tr></table></figure>
+
+<p><code>youremail@example.com</code>是你的email地址. 在显示<code>Enter passphrase</code>时输入任意密码,其他选项直接回车(选择默认值).</p>
+<p>最后会生成<code>id_rsa</code>和<code>id_rsa.pub</code>两个文件.</p>
+<h3>3) 复制key fingerprint到github</h3>
+<p>访问SSH设置网页:<a href="https://github.com/settings/ssh">https://github.com/settings/ssh</a></p>
+<p>点击<code>Add SSH key</code>,<code>Title</code>任意,<code>key</code>输入<code>id_rsa.pub</code>文件的所有内容.之后点击<code>Add key</code>完成.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2013/04/18/2013-04-18-github-set-up-ssh-keys/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-04-17T23:13:00.000Z"><a href="/2013/04/18/2013-04-18-setup-octopress-on-github-step-by-step/">Apr 18 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/04/18/2013-04-18-setup-octopress-on-github-step-by-step/">教程:一步步在github上建立octopress博客</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><em>照此教程,可搭建此博客.</em></p>
+<h2>目标</h2>
+<p>创建网址为<a href="http://never.doubting.me">http://never.doubting.me</a>的博客.博客使用octopress程序,搭建在github的服务器上.网页与本地机器的<code>never.doubting.me</code>文件夹同步.</p>
+<h2>步骤</h2>
+<h3>1) 下载octopress至本地never.doubting.me文件夹</h3>
+<p>octopress的源代码同样在github上管理,因此我们使用git克隆一份到本地的<code>never.doubting.me</code>文件夹,并进入此文件夹.
+如你没有域名,可以使用github提供的默认域名:<code>yourname.github.com</code>,yourname是你github的用户名.</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>git clone git://github.com/imathis/octopress.git never.doubting.me
+cd never.doubting.me
+</pre></td></tr></table></figure>
+
+<h3>2) 安装相关组件</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>gem install bundler
+bundle install
+</pre></td></tr></table></figure>
+
+<h3>3) 安装主题</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>rake install
+</pre></td></tr></table></figure>
+上条命令安装默认主题,在<a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes</a>可以找到许多第三方主题,这儿我们选择<a href="http://zespia.tw/Octopress-Theme-Slash/">slash</a>主题,如询问是否覆盖,选择是:
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>git clone git://github.com/tommy351/Octopress-Theme-Slash.git .themes/slash
+rake install[<span class="string">'slash'</span>]
+</pre></td></tr></table></figure>
+###4) 在github上创建repository
+<strong>注意:repository的名字一定要<code>yourname.github.com</code>这样的格式.</strong>
+<code>youname</code>是你注册时的用户名.
+
+这儿我创建名为<code>znithy.github.com</code>的repository,创建好后拷贝ssh地址.
+
+<code>https://github.com/znithy/znithy.github.com.git</code>
+
+###5) 建立本地与github的联系
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>rake setup_github_pages
+</pre></td></tr></table></figure>
+输入上述ssh地址,注意区分大小写.
+如遇验证问题,提示类似
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre>rake aborted!
+undefined method
+[]<span class="string">' for nil:NilClass
+
+Tasks: TOP =&gt; setup_github_pages
+(See full trace by running task with --trace)
+</pre></td></tr></table></figure>
+
+<p>的信息,请看此文:[github设置ssh验证]</p>
+<h3>6) 绑定域名</h3>
+<p>首先把你的域名指向<code>207.97.227.245</code>,如不知怎么操作,请咨询域名注册商.
+在source文件夹下建立CNAME文件:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="keyword">echo</span> <span class="string">'never.doubting.me'</span> &gt;&gt; source/CNAME
+</pre></td></tr></table></figure>
+
+<h3>7) 生成网页并推送到github</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>rake generate
+rake deploy
+</pre></td></tr></table></figure>
+稍等几分钟,你就可通过域名访问博客了.并且收到一封博客建立的信件.
+
+###8) 自定义博客
+博客的基本信息在<code>_config.yml</code>文件中修改.
+自定义css等在<code>source</code>文件夹中.
+修改后别忘了:
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>rake generate
+rake deploy
+</pre></td></tr></table></figure>
+
+<h3>9) 发表文章</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>rake new_post[<span class="string">"教程:一步步在github上建立octopress博客"</span>]
+</pre></td></tr></table></figure>
+这儿我新建了一篇名为<code>教程:一步步在github上建立octopress博客</code>的文章.
+之后去<code>source/_post/</code>文件夹找到对应<code>.markdown</code>文件修改.
+
+打开文件后可以看到文件头包含一些文章的信息,这儿我修改为:
+
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="code"><pre>---
+layout: post    
+title: <span class="string">"教程:一步步在github上建立octopress博客"</span>    
+date: 2013-04-18 01:13    
+author: znithy	
+comments: <span class="literal">true</span>    
+categories:     
+- 教程    
+- github	
+- octopress    
+published: <span class="literal">false</span>
+---   
+</pre></td></tr></table></figure>
+
+<p>第一张指明此篇是<code>post</code>,后面是标题,时间和作者,我加了<code>教程</code> <code>github</code> <code>octopuses</code> 三个标签,并且允许评论,<code>published: false</code>表示不要发表,如想要发表改成<code>published: true</code>或者直接删掉这行.</p>
+<p>文章直接写在这部分内容下面.</p>
+<h3>10) 发表外链文章</h3>
+<p>点击标题转向其他网页.创建方法同上,只是需要添加<code>external-url</code>这个条目.
+下面是一个例子:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre>---	    
+layout: post	
+title: <span class="string">"非常不错的科学博客"</span>	
+date: 2013-04-18 01:13 		
+comments: <span class="literal">true</span>		
+external-url: http://keep.doubting.me/		
+---	    	
+</pre></td></tr></table></figure>
+
+<h3>11) 发表页面</h3>
+<p>创建网址为<code>http://never.doubting.me/about/i.html</code>的网页:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>rake new_page[about/i.html]    
+</pre></td></tr></table></figure>
+
+<p>与<code>post</code>不同的是,此时没有<code>categories</code>这个条目,但多了<code>sharing</code>和<code>footer</code>,具体有什么作用,不妨自己试下.</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre>---    
+layout: page    	
+title: <span class="string">"Super Awesome"</span>    
+date: 2011-07-03 5:59    
+comments: <span class="literal">true</span>    
+sharing: <span class="literal">true</span>    
+footer: <span class="literal">true</span>    	
+---    
+</pre></td></tr></table></figure>
+
+<h3>12) 管理文章</h3>
+<p>直接增加或删除.markdown文件即可.
+每次更新文件后别忘了:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>rake generate
+rake deploy
+</pre></td></tr></table></figure>
+
+<h2>其他</h2>
+<h3>关于怎样使用git,这份教程很不错,推荐.</h3>
+<blockquote>
+<p><a href="http://znithy.com/download/看日记学git.pdf">看日记学git.pdf</a></p>
+</blockquote>
+<h3>第三方插件地址:</h3>
+<blockquote>
+<p><a href="https://github.com/imathis/octopress/wiki/3rd-party-plugins">https://github.com/imathis/octopress/wiki/3rd-party-plugins</a></p>
+</blockquote>
+<h3>中文问题:</h3>
+<p>如遇到此类提示(可能因设置了中文的catagory):</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre>...
+Liquid Exception: invalid byte sequence <span class="keyword">in</span> UTF-8 <span class="keyword">in</span> atom.xml
+/Documents/never.doubting.me/plugins/octopress_filters.rb:75:<span class="keyword">in</span> `gsub<span class="string">'
+/Documents/never.doubting.me/plugins/octopress_filters.rb:75:in `cdata_escape'</span>
+...
+</pre></td></tr></table></figure>
+
+<p>最方便的方法是换用kramdown.首先安装kramdown:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>gem install kramdown
+</pre></td></tr></table></figure>
+
+<p>之后修改<code>_config.yml</code>文件:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>markdown: kramdown
+</pre></td></tr></table></figure>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2013/04/18/2013-04-18-setup-octopress-on-github-step-by-step/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+  
 
   <nav id="pagination">
   
@@ -99,6 +646,25 @@
 </div>
 
   
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/github/">github</a><small>1</small></li>
+  
+    <li><a href="/categories/教程/github/">github</a><small>1</small></li>
+  
+    <li><a href="/categories/github/教程/octopress/">octopress</a><small>1</small></li>
+  
+    <li><a href="/categories/教程/github/octopress/">octopress</a><small>1</small></li>
+  
+    <li><a href="/categories/github/教程/">教程</a><small>1</small></li>
+  
+    <li><a href="/categories/教程/">教程</a><small>1</small></li>
+  
+  </ul>
+</div>
+
 
   
 

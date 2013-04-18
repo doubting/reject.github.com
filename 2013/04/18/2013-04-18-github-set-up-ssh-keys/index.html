@@ -3,15 +3,52 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hello World | reject</title>
+  <title>教程: github设置ssh连接 | reject</title>
   <meta name="author" content="znithy">
   
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation to learn how to use.">
+  <meta name="description" content="问题
+本地与github关联时可能遇到ssh验证问题,类似如下提示信息:
+1
+2
+3
+4
+5
+rake aborted!    
+undefined method `[]' for nil:NilClass    
+
+Tasks: TOP =&gt; setup_github_pages    
+(See full trace by running task with --trace)    
+
+
+
+原因
+缺少建立ssh连接要求的秘钥.
+解决方法
+1) 检查是否已经有ssh秘钥
+1
+2
+cd ~/.ssh    	
+ls -a
+
+
+进入目录后,查看是否有id_rsa和id_rsa.pub这两个文件.
+如不存在.ssh文件夹,自然不存在上述两个文件.
+如已有这两个文件,直接跳到步骤3.
+2) 生成ssh秘钥
+1
+ssh-keygen -t rsa -C &quot;youremail@example.com&quot;
+
+
+youremail@example.com是你的email地址. 在显示Enter passphrase时输入任意密码,其他选项直接回车(选择默认值).
+最后会生成id_rsa和id_rsa.pub两个文件.
+3) 复制key fingerprint到github
+访问SSH设置网页:https://github.com/settings/ssh
+点击Add SSH key,Title任意,key输入id_rsa.pub文件的所有内容.之后点击Add key完成.">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Hello World"/>
+  <meta property="og:title" content="教程: github设置ssh连接"/>
   <meta property="og:site_name" content="reject"/>
 
   
@@ -50,23 +87,65 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2013-04-18T21:19:55.000Z"><a href="/2013/04/18/hello-world/">Apr 18 2013</a></time>
+        <time datetime="2013-04-18T02:03:00.000Z"><a href="/2013/04/18/2013-04-18-github-set-up-ssh-keys/">Apr 18 2013</a></time>
       
       
   
-    <h1 class="title">Hello World</h1>
+    <h1 class="title">教程: github设置ssh连接</h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Welcome to <a href="http://zespia.tw/hexo">Hexo</a>! This is your very first post. Check <a href="http://zespia.tw/hexo/docs">documentation</a> to learn how to use.</p>
+        <h2>问题</h2>
+<p>本地与github关联时可能遇到ssh验证问题,类似如下提示信息:</p>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+</pre></td><td class="code"><pre>rake aborted!    
+undefined method `[]<span class="string">' for nil:NilClass    
+
+Tasks: TOP =&gt; setup_github_pages    
+(See full trace by running task with --trace)    
+</pre></td></tr></table></figure>
+
+
+<h2>原因</h2>
+<p>缺少建立ssh连接要求的秘钥.</p>
+<h2>解决方法</h2>
+<h3>1) 检查是否已经有ssh秘钥</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre>cd ~/.ssh    	
+ls -a
+</pre></td></tr></table></figure>
+
+<p>进入目录后,查看是否有<code>id_rsa</code>和<code>id_rsa.pub</code>这两个文件.</p>
+<p>如不存在<code>.ssh</code>文件夹,自然不存在上述两个文件.</p>
+<p>如已有这两个文件,直接跳到步骤3.</p>
+<h3>2) 生成ssh秘钥</h3>
+<figure class="highlight lang-bash"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>ssh-keygen -t rsa -C <span class="string">"youremail@example.com"</span>
+</pre></td></tr></table></figure>
+
+<p><code>youremail@example.com</code>是你的email地址. 在显示<code>Enter passphrase</code>时输入任意密码,其他选项直接回车(选择默认值).</p>
+<p>最后会生成<code>id_rsa</code>和<code>id_rsa.pub</code>两个文件.</p>
+<h3>3) 复制key fingerprint到github</h3>
+<p>访问SSH设置网页:<a href="https://github.com/settings/ssh">https://github.com/settings/ssh</a></p>
+<p>点击<code>Add SSH key</code>,<code>Title</code>任意,<code>key</code>输入<code>id_rsa.pub</code>文件的所有内容.之后点击<code>Add key</code>完成.</p>
 
       
     </div>
     <footer>
       
         
+  
+  <div class="categories">
+    <a href="/categories/github/">github</a>, <a href="/categories/github/教程/">教程</a>, <a href="/categories/github/教程/octopress/">octopress</a>
+  </div>
+
         
         
   <div class="addthis addthis_toolbox addthis_default_style">
